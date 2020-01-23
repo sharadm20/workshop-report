@@ -1,0 +1,54 @@
+
+<div class="navbar is-transparent" >
+    <div class="navbar-brand">
+    <a class="navbar-item" href="http://eyic.e-yantra.org">
+        {% load static %}
+      <img src="{% static "generatePdf/img/logo.png" %}" alt="e-Yantra" width="180" height="28" id="e-yantra-logo">
+    </a>
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" style="color: white;" click="openMenu">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+    </div>
+    <div class="navbar-menu" >
+      <div class="navbar-end">
+        <div class="navbar-item">
+          <div class="field is-grouped">
+            <div class="navbar-item has-dropdown is-hoverable">
+
+                <a class="navbar-link is-arrowless">
+                  <div class="user-icon">
+                    <i class="fas fa-user-circle icon-border" ></i>
+                    <i class="fas fa-angle-down" style="font-size:20px;"></i>
+                  </div>
+                </a>
+
+                <div class="navbar-dropdown is-right is-boxed">
+                  <div class="navbar-item" style="font-size:20px;font-weight:bold;color:#e97e6e">user name</div>
+                  <div class="navbar-item" v-if="user.role>3 && teamId" style="font-size:16px;font-weight:bold;color:#2a3a52">Team ID: </div>
+                  <hr class="navbar-divider">
+                    <a href="/" class="navbar-item bg-color"><i class="fas fa-key" style="padding-right:5px;"></i> Update Password</a>
+                    <a href="/" class="navbar-item bg-color"><i class="far fa-address-card" style="padding-right:5px;"></i>  Update Profile</a>
+                    <a href="/" class="navbar-item bg-color"><i class="fas fa-sign-out-alt" style="padding-right:5px;"></i> Logout </a>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id ="dropdown-menu" style="display:none;">
+                  <div class="navbar-item" style="font-size:20px;font-weight:bold;color:#e97e6e">user.name</div>
+                  <div class="navbar-item" v-if="user.role>3 && teamId" style="font-size:16px;font-weight:bold;color:#2a3a52">Team ID: teamId</div>
+                  <hr class="navbar-divider">
+                    <a href="/" class="navbar-item bg-color"><i class="fas fa-key" style="padding-right:5px;"></i> Update Password</a>
+                    <a href="/" class="navbar-item bg-color"><i class="far fa-address-card" style="padding-right:5px;"></i>  Update Profile</a>
+                    <a href="/" class="navbar-item bg-color"><i class="fas fa-sign-out-alt" style="padding-right:5px;"></i> Logout </a>
+  </div>
+
+</div>
+<script>
+function openMenu(){
+
+}
+</script>

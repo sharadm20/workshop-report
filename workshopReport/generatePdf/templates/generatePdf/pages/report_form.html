@@ -1,0 +1,167 @@
+{% extends "generatePdf/base.html" %}
+{% block content %}
+<div class="container">
+    <div class="block">
+        <div class="column is-offset-1">
+        <form action="/form-page-1" method="post">
+            {% csrf_token %}
+            <div class="field is-horizontal">
+              <div class="field-label is-normal">
+                <label class="label">Workshop conducted at</label>
+              </div>
+              <div class="field-body">
+                <div class="field is-narrow">
+                    <div class="control">
+                        <div class="select is-fullwidth">
+                            <select onchange="getWorkshopDateAndTeam(this)">
+                            <option hidden> -- </option>
+                                {% for workshop in workshops %}
+                                  <option value="{{ workshop.id }}">{{ workshop.clg.college_name }}</option>
+                                {% endfor %}
+
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="field is-horizontal">
+          <div class="field-label is-normal">
+            <label class="label">Date of workshop</label>
+          </div>
+          <div class="field-body">
+              <div class="field is-narrow">
+                  <div class="control">
+                      <input class="input" type="date" name="date">
+                  </div>
+              </div>
+            </div>
+        </div>
+        <div class="field is-horizontal">
+          <div class="field-label is-normal">
+            <label class="label">No of participants:</label>
+          </div>
+          <div class="field-body">
+              <div class="field is-narrow">
+                  <div class="control">
+                      <input class="input" type="number" name="participants">
+                  </div>
+              </div>
+            </div>
+        </div>
+        <div class="field is-horizontal">
+          <div class="field-label is-normal">
+            <label class="label">No of college:</label>
+          </div>
+          <div class="field-body">
+              <div class="field is-narrow">
+                  <div class="control">
+                      <input class="input" type="number" name="college_count">
+                  </div>
+              </div>
+            </div>
+        </div>
+        <div class="field is-horizontal">
+          <div class="field-label is-normal">
+            <label class="label">No of Loi collected</label>
+          </div>
+          <div class="field-body">
+              <div class="field is-narrow">
+                  <div class="control">
+                      <input class="input" type="number" name="loi_count">
+                  </div>
+              </div>
+            </div>
+        </div>
+        <div class="field is-horizontal">
+          <div class="field-label is-normal">
+            <label class="label">No of refresher college</label>
+          </div>
+          <div class="field-body">
+              <div class="field is-narrow">
+                  <div class="control">
+                      <input class="input" type="number" name="refresher_count">
+                  </div>
+              </div>
+            </div>
+        </div>
+        <div class="field is-horizontal">
+          <div class="field-label is-normal">
+            <label class="label">No of kits given:</label>
+          </div>
+          <div class="field-body">
+              <div class="field is-narrow">
+                  <div class="control">
+                      <input class="input" type="number" name="kits_distributed">
+                  </div>
+              </div>
+            </div>
+        </div>
+        <div class="field is-horizontal">
+          <div class="field-label is-normal">
+            <label class="label">No of kits pending:</label>
+          </div>
+          <div class="field-body">
+              <div class="field is-narrow">
+                  <div class="control">
+                      <input class="input" type="number" name="kits_pending">
+                  </div>
+              </div>
+            </div>
+        </div>
+        <div class="field is-horizontal">
+          <div class="field-label is-normal">
+            <label class="label">No of certificates given:</label>
+          </div>
+          <div class="field-body">
+              <div class="field is-narrow">
+                  <div class="control">
+                      <input class="input" type="number" name="certificates_distributed">
+                  </div>
+              </div>
+            </div>
+        </div>
+        <div class="field is-horizontal">
+          <div class="field-label is-normal">
+            <label class="label">No of certificates pending:</label>
+          </div>
+          <div class="field-body">
+              <div class="field is-narrow">
+                  <div class="control">
+                      <input class="input" type="number" name="certificates_pending">
+                  </div>
+              </div>
+            </div>
+        </div>
+        <div class="field is-grouped">
+            <div class="control">
+                <button class="button is-link">Next</button>
+            </div>
+            <div class="control">
+                <button class="button is-link is-light">Cancel</button>
+            </div>
+        </div>
+    </form>
+    </div>
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+    <script>
+    function getWorkshopDateAndTeam(e){
+
+    $.ajax({
+      type: "POST",
+      url: "/workshop_dtls",
+      data: {
+        'clg_id': e.value, 'csrfmiddlewaretoken': $("[name=csrfmiddlewaretoken]").val()
+      },
+      success: function (response) {
+            console.log(response)
+      }
+    });
+    return false; //<---- move it here
+
+    }
+    </script>
+{% endblock %}
