@@ -6,11 +6,13 @@ class WorkshopDtlsForm(forms.Form):
     def __init__(self, workshops, *args, **kwargs):
         super(WorkshopDtlsForm, self).__init__(*args, **kwargs)
         self.fields['workshop_id'] = forms.ChoiceField(
-            choices=[(workshop.id, str(workshop.clg.college_name)) for workshop in workshops]
-        )
+            widget=forms.Select(attrs={"onChange": 'getWorkshopDateAndTeam()'}),
+            choices=[(workshop.id, str(workshop.clg.college_name)) for workshop in workshops],
+            required=True
+            )
 
     workshop_id = forms.ChoiceField(label='Workshop conducted',
-                                    widget=forms.Select(attrs={"onChange":'getWorkshopDateAndTeam(this)'}),
+                                    widget=forms.Select(attrs={"onChange": 'getWorkshopDateAndTeam()'}),
                                     required=True)
     workshop_team = forms.CharField(label='Workshop team', disabled=True)
     workshop_date_start = forms.CharField(label='Workshop start date', disabled=True)
