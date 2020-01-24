@@ -2,18 +2,20 @@ from django.core import serializers
 from django.http import HttpResponse
 import json
 from django.shortcuts import render
+
+from .forms import WorkshopDtlsForm
 from .models import *
 
 
 def index(request):
-    workshops = WorkshopDtls.objects.order_by('-start_date').all()
-    return render(request, 'generatePdf/pages/report_form.html', {'workshops': workshops})
+    workshops = WorkshopDtls.objects.order_by('-start_date').select_related('clg')
+    form = WorkshopDtlsForm(workshops)
+    return render(request, 'generatePdf/pages/form_step_1_class.html', {'form': form})
 
 
 def formPageOne(request):
-    print(request.POST)
-
-    return render(request, 'generatePdf/pages/report_form.html')
+    request.session['workshop_detail'] = request.POST
+    return render(request, 'generatePdf/pages/form_step_2.html')
 
 
 def workshopDtls(request):

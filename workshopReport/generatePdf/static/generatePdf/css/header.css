@@ -1,4 +1,27 @@
-html {
+html, body {
+  height: 100%;
+  margin: 0; padding: 0;  /* to avoid scrollbars */
+}
+
+#wrapper {
+  display: flex;  /* use the flex model */
+  min-height: 100%;
+  flex-direction: column;  /* learn more: http://philipwalton.github.io/solved-by-flexbox/demos/sticky-footer/ */
+}
+
+#header {
+  height: 100px;  /* can be variable as well */
+}
+
+#content {
+  flex: 1;
+}
+
+#footer{
+
+}
+
+.app {
 
     display: flex;
         flex-direction: column ;
@@ -6,24 +29,15 @@ html {
         margin-bottom: 15vh;
         }
 
-#header,#footer,#content { position:absolute; right:0;left:0}
-
-#header{
-   height:100px; top:0;
-}
-#footer{
-  height:100px; bottom:0;
-}
-#content{
-  top:100px;
-  bottom:100px;
-  overflow:hidden; /* use this if don't want any window scrollbars and use an inner element for scrolling*/
-}
 .block {
    display: flex;
    flex-wrap: wrap;
+    align-items:flex-start;
+  align-content:flex-start;
    justify-content: space-between;
    border-radius: 15px;
+    padding-left: 30px;
+    padding-top: 30px;
    background: #E2E2E2;
 }
 
