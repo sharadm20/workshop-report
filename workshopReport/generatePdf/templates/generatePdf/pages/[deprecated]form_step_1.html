@@ -1,0 +1,240 @@
+{% extends "generatePdf/base.html" %}
+{% block content %}
+<div class="container">
+    <div class="columns is-multiline">
+        <div class="column is-8">
+               <ul class="steps is-narrow is-medium is-centered has-content-centered">
+      <li class="steps-segment is-active has-gap">
+        <a href="#" class="has-text-dark">
+          <span class="steps-marker">
+            <span class="icon">
+              <i class="fa fa-info-circle"></i>
+            </span>
+          </span>
+          <div class="steps-content">
+            <p class="heading">1. Workshop Detail</p>
+          </div>
+        </a>
+      </li>
+      <li class="steps-segment">
+        <a href="#" class="has-text-dark">
+          <span class="steps-marker">
+            <span class="icon">
+              <i class="fa fa-comment-dots"></i>
+            </span>
+          </span>
+          <div class="steps-content">
+            <p class="heading">2. Workshop feedback</p>
+          </div>
+        </a>
+      </li>
+      <li class="steps-segment">
+        <span class="steps-marker">
+          <span class="icon">
+            <i class="fa fa-html5"></i>
+          </span>
+        </span>
+        <div class="steps-content">
+          <p class="heading">3. View Report</p>
+        </div>
+      </li>
+      <li class="steps-segment">
+        <span class="steps-marker is-hollow">
+          <span class="icon">
+            <i class="fa fa-file-pdf"></i>
+          </span>
+        </span>
+        <div class="steps-content">
+          <p class="heading">4. Generate Report</p>
+        </div>
+      </li>
+    </ul>
+        </div>
+        <div class="column is-10 is-offset-1">
+        <div class="block">
+        <form action="/form-page-1" method="post">
+            {% csrf_token %}
+            <div class="field is-horizontal">
+              <div class="field-label is-normal">
+                <label class="label">Workshop conducted at</label>
+              </div>
+              <div class="field-body">
+                <div class="field is-narrow">
+                    <div class="control">
+                        <div class="select is-fullwidth">
+                            <select onchange="getWorkshopDateAndTeam(this)" name="workshop_id">
+                            <option hidden> -- </option>
+                                {% for workshop in workshops %}
+                                  <option value="{{ workshop.id }}">{{ workshop.clg.college_name }}</option>
+                                {% endfor %}
+
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="field is-horizontal">
+          <div class="field-label is-normal">
+            <label class="label">Date of workshop</label>
+          </div>
+          <div class="field-body">
+              <div class="field is-narrow">
+                  <div class="control">
+                      <div id="date_to"></div>
+                      <div id="date_from"></div>
+                  </div>
+              </div>
+            </div>
+        </div>
+         <div class="field is-horizontal">
+          <div class="field-label is-normal">
+            <label class="label">workshop Team</label>
+          </div>
+          <div class="field-body">
+              <div class="field is-narrow">
+                  <div class="control">
+                      <div id="workshop_team"></div>
+                  </div>
+              </div>
+            </div>
+        </div>
+        <div class="field is-horizontal">
+          <div class="field-label is-normal">
+            <label class="label">No of participants:</label>
+          </div>
+          <div class="field-body">
+              <div class="field is-narrow">
+                  <div class="control">
+                      <input class="input" type="number" name="participants">
+                  </div>
+              </div>
+            </div>
+        </div>
+        <div class="field is-horizontal">
+          <div class="field-label is-normal">
+            <label class="label">No of college:</label>
+          </div>
+          <div class="field-body">
+              <div class="field is-narrow">
+                  <div class="control">
+                      <input class="input" type="number" name="college_count">
+                  </div>
+              </div>
+            </div>
+        </div>
+        <div class="field is-horizontal">
+          <div class="field-label is-normal">
+            <label class="label">No of Loi collected</label>
+          </div>
+          <div class="field-body">
+              <div class="field is-narrow">
+                  <div class="control">
+                      <input class="input" type="number" name="loi_count">
+                  </div>
+              </div>
+            </div>
+        </div>
+        <div class="field is-horizontal">
+          <div class="field-label is-normal">
+            <label class="label">No of refresher college</label>
+          </div>
+          <div class="field-body">
+              <div class="field is-narrow">
+                  <div class="control">
+                      <input class="input" type="number" name="refresher_count">
+                  </div>
+              </div>
+            </div>
+        </div>
+        <div class="field is-horizontal">
+          <div class="field-label is-normal">
+            <label class="label">No of kits given:</label>
+          </div>
+          <div class="field-body">
+              <div class="field is-narrow">
+                  <div class="control">
+                      <input class="input" type="number" name="kits_distributed">
+                  </div>
+              </div>
+            </div>
+        </div>
+        <div class="field is-horizontal">
+          <div class="field-label is-normal">
+            <label class="label">No of kits pending:</label>
+          </div>
+          <div class="field-body">
+              <div class="field is-narrow">
+                  <div class="control">
+                      <input class="input" type="number" name="kits_pending">
+                  </div>
+              </div>
+            </div>
+        </div>
+        <div class="field is-horizontal">
+          <div class="field-label is-normal">
+            <label class="label">No of certificates given:</label>
+          </div>
+          <div class="field-body">
+              <div class="field is-narrow">
+                  <div class="control">
+                      <input class="input" type="number" name="certificates_distributed">
+                  </div>
+              </div>
+            </div>
+        </div>
+        <div class="field is-horizontal">
+          <div class="field-label is-normal">
+            <label class="label">No of certificates pending:</label>
+          </div>
+          <div class="field-body">
+              <div class="field is-narrow">
+                  <div class="control">
+                      <input class="input" type="number" name="certificates_pending">
+                  </div>
+              </div>
+            </div>
+        </div>
+        <div class="field is-grouped">
+            <div class="control">
+                <button class="button is-link">Next</button>
+            </div>
+            <div class="control">
+                <button class="button is-link is-light">Cancel</button>
+            </div>
+        </div>
+    </form>
+        </div>
+    </div>
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+    <script>
+    function getWorkshopDateAndTeam(e){
+
+    $.ajax({
+      type: "POST",
+      url: "/workshop_dtls",
+      data: {
+        'clg_id': e.value, 'csrfmiddlewaretoken': $("[name=csrfmiddlewaretoken]").val()
+      },
+      success: function (response) {
+            if(response !== null){
+                const start_date='<p>'+response.start_date +'</p>';
+                const end_date='<p>'+response.end_date +'</p>'
+                const workshop_team='<p>'+response.workshop_team +'</p>'
+                $('#date_to').empty();
+                $('#date_to').append(start_date);
+                $('#date_from').empty();
+                $('#date_from').append(end_date);
+                $('#workshop_team').empty();
+                $('#workshop_team').append(workshop_team);
+            }
+      }
+    });
+    return false; //<---- move it here
+
+    }
+    </script>
+{% endblock %}

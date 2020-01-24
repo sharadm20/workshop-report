@@ -10,7 +10,7 @@ from .models import *
 def index(request):
     workshops = WorkshopDtls.objects.order_by('-start_date').select_related('clg')
     form = WorkshopDtlsForm(workshops)
-    return render(request, 'generatePdf/pages/form_step_1_class.html', {'form': form})
+    return render(request, 'generatePdf/pages/form_step_1.html', {'form': form})
 
 
 def formPageOne(request):

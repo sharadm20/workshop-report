@@ -9,7 +9,9 @@ class WorkshopDtlsForm(forms.Form):
             choices=[(workshop.id, str(workshop.clg.college_name)) for workshop in workshops]
         )
 
-    workshop_id = forms.ChoiceField(label='Workshop conducted', required=True)
+    workshop_id = forms.ChoiceField(label='Workshop conducted',
+                                    widget=forms.Select(attrs={"onChange":'getWorkshopDateAndTeam(this)'}),
+                                    required=True)
     workshop_team = forms.CharField(label='Workshop team', disabled=True)
     workshop_date_start = forms.CharField(label='Workshop start date', disabled=True)
     workshop_date_end = forms.CharField(label='Workshop end date', disabled=True)
