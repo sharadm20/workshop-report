@@ -196,3 +196,17 @@ class WorkshopTeam(models.Model):
     class Meta:
         managed = False
         db_table = 'workshop_team'
+
+
+class WorkshopHospitality(models.Model):
+    workshop_id = models.IntegerField(blank=True, null=True)
+    hospitality = models.TextField(null=True)
+    quality_accommodation = models.TextField(null=True)
+    quality_food = models.TextField(null=True)
+    quality_logistics = models.TextField(null=True)
+    observation = models.TextField(null=True)
+    expenditure = models.IntegerField(null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'workshop_hospitality'

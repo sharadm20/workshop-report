@@ -1,5 +1,6 @@
 {% extends "generatePdf/base.html" %}
 {% block content %}
+      {% load bulma_tags %}
 <div class="container">
     <div class="columns is-multiline">
         <div class="column is-8">
@@ -16,7 +17,7 @@
           </div>
         </a>
       </li>
-      <li class="steps-segment is-active has-gap">
+      <li class="steps-segment">
         <a href="#" class="has-text-dark">
           <span class="steps-marker">
             <span class="icon">
@@ -27,8 +28,7 @@
             <p class="heading">2. Workshop feedback</p>
           </div>
         </a>
-      </li>
-      <li class="steps-segment">
+      </li><li class="steps-segment is-active has-gap">
         <span class="steps-marker">
           <span class="icon">
             <i class="fa fa-info-circle"></i>
@@ -48,33 +48,17 @@
           <p class="heading">4. View Report and Html</p>
         </div>
       </li>
-
     </ul>
         </div>
         <div class="column is-10 is-offset-1">
         <div class="block">
-        <form action="/step-2" method="post" enctype="multipart/form-data">
+        <form action="/step-3" method="post" enctype="multipart/form-data">
             {% csrf_token %}
-           <div id="file-js-example" class="file has-name">
-                <label class="file-label">
-                <input class="file-input" type="file" name="report_file">
-                    <span class="file-cta">
-                        <span class="file-icon">
-                            <i class="fas fa-upload"></i>
-                        </span>
-                        <span class="file-label">
-                            Choose a file…
-                        </span>
-                    </span>
-                <span class="file-name">
-                  No file uploaded
-                </span>
-                </label>
-            </div>
+            {{ form |bulma }}
 
         <div class="field is-grouped">
             <div class="control">
-                <button class="button is-primary">Next</button>
+                <button class="button is-link">Next</button>
             </div>
             <div class="control">
                 <button class="button is-link is-light">Cancel</button>
@@ -94,6 +78,19 @@
       const fileName = document.querySelector('#file-js-example .file-name');
       fileName.textContent = fileInput.files[0].name;
     }
-  }
+  };
+  $(function() {
+    $.ajax({
+        type: "GET",
+        headers: { "X-CSRFToken": $("[name=csrfmiddlewaretoken]").val() },
+        url: "/ajax/workshop_id",
+        success: function (response) {
+                    if(response !== null){
+                        $('#id_workshop_id').val(response.workshop_id);
+
+                    }
+              }
+            });
+    });
 </script>
 {% endblock %}

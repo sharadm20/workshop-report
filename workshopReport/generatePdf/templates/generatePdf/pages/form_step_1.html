@@ -32,28 +32,28 @@
       <li class="steps-segment">
         <span class="steps-marker">
           <span class="icon">
+            <i class="fa fa-info-circle"></i>
+          </span>
+        </span>
+        <div class="steps-content">
+          <p class="heading">3. Workshop Hospitality</p>
+        </div>
+      </li>
+      <li class="steps-segment">
+        <span class="steps-marker">
+          <span class="icon">
             <i class="fa fa-html5"></i>
           </span>
         </span>
         <div class="steps-content">
-          <p class="heading">3. View Report</p>
-        </div>
-      </li>
-      <li class="steps-segment">
-        <span class="steps-marker is-hollow">
-          <span class="icon">
-            <i class="fa fa-file-pdf"></i>
-          </span>
-        </span>
-        <div class="steps-content">
-          <p class="heading">4. Generate Report</p>
+          <p class="heading">4. View Report and Html</p>
         </div>
       </li>
     </ul>
         </div>
         <div class="column is-10 is-offset-1">
         <div class="block">
-        <form action="/form-page-1" method="post">
+        <form action="/" method="post">
             {% csrf_token %}
             {{ form |bulma }}
         <div class="field is-grouped">
@@ -76,18 +76,18 @@
 
             $.ajax({
               type: "POST",
-              url: "/workshop_dtls",
+              url: "/ajax/workshop_dtls",
               data: {
                 'clg_id':$('#id_workshop_id').val(), 'csrfmiddlewaretoken': $("[name=csrfmiddlewaretoken]").val()
               },
               success: function (response) {
                     if(response !== null){
 
-                        $('#id_workshop_date_start').attr('value',response.start_date);
+                        $('#id_workshop_date_start').val(response.start_date);
 
-                        $('#id_workshop_date_end').attr('value',response.end_date);
+                        $('#id_workshop_date_end').val(response.end_date);
 
-                         $('#id_workshop_team').attr('value',response.workshop_team);
+                         $('#id_workshop_team').val(response.workshop_team);
                     }
               }
             });
