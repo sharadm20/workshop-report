@@ -52,19 +52,20 @@
         </div>
         <div class="column is-10 is-offset-1">
         <div class="block">
-
+        <form method="POST" action="/step-4">
+            {% csrf_token %}
         <div class="field is-grouped">
             <div class="control">
-                <button class="button is-primary">View Html</button>
+                <button class="button is-primary" name="html" type="submit">View Html</button>
             </div>
             <div class="control">
-                <button class="button is-warning is-light">View pdf</button>
+                <button type="submit" name="pdf" class="button is-warning is-light">View pdf</button>
             </div>
              <div class="control">
-                <button class="button is-danger is-light">Download pdf</button>
+                <button type="submit" name="download" class="button is-danger is-light">Download pdf</button>
             </div>
         </div>
-
+        </form>
         </div>
     </div>
     </div>
@@ -72,25 +73,6 @@
 {% endblock %}
 {% block script %}
 <script>
-  const fileInput = document.querySelector('#file-js-example input[type=file]');
-  fileInput.onchange = () => {
-    if (fileInput.files.length > 0) {
-      const fileName = document.querySelector('#file-js-example .file-name');
-      fileName.textContent = fileInput.files[0].name;
-    }
-  };
-  $(function() {
-    $.ajax({
-        type: "GET",
-        headers: { "X-CSRFToken": $("[name=csrfmiddlewaretoken]").val() },
-        url: "/ajax/workshop_id",
-        success: function (response) {
-                    if(response !== null){
-                        $('#id_workshop_id').val(response.workshop_id);
 
-                    }
-              }
-            });
-    });
 </script>
 {% endblock %}

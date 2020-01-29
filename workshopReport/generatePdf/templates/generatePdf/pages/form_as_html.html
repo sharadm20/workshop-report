@@ -1,0 +1,20 @@
+{% extends "generatePdf/report.html" %}
+{% block detail %}
+    <p><strong>Conducted at:</strong> {{ workshop.college_name }}</p>
+    <p><strong>Date:</strong> {{ workshop.start_date }} {{ workshop.end_date }}</p>
+    <p><strong>Conducted by:</strong> {{ workshop.workshop_team }}</p>
+    <br><br>
+    <p><strong>Number of participants:</strong> {{ workshop.participants }}</p>
+    <p><strong>Number of Colleges:</strong> {{ workshop.college_count }}</p>
+    <p><strong>Number of Loi's collected:</strong> {{ workshop.loi_count }}</p>
+    <p><strong>Number of Refreshers college:</strong> {{ workshop.refresher_count }}</p>
+    <p><strong>Number of Kits:</strong>  Distributed = {{ workshop.kits_distributed }} Pending = {{ workshop.kits_pending }}</p>
+    <p><strong>Number of Certificates:</strong> Distributed = {{ workshop.certificates_distributed }} Pending = {{ workshop.certificates_pending }}</p>
+
+{% endblock %}
+{% block feedback %}
+     <p><strong>Feedback response count:</strong> 0 </p>
+     <p>The workshop was conducted by <strong>{{ workshop.workshop_team }}</strong></p>
+    <h5> Modules taken- </h5>
+
+{% endblock %}

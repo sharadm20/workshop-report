@@ -8,31 +8,6 @@
 from django.db import models
 
 
-class ElsiClgContactDtl(models.Model):
-    clg_id = models.IntegerField()
-    name = models.CharField(max_length=512, blank=True, null=True)
-    emailid = models.CharField(max_length=256, blank=True, null=True)
-    gender = models.CharField(max_length=12, blank=True, null=True)
-    branch = models.CharField(max_length=128, blank=True, null=True)
-    alt_email1 = models.CharField(max_length=256, blank=True, null=True)
-    alt_email2 = models.CharField(max_length=256, blank=True, null=True)
-    alt_email3 = models.CharField(max_length=256, blank=True, null=True)
-    contact_num = models.CharField(max_length=50, blank=True, null=True)
-    alt_contact1 = models.CharField(max_length=50, blank=True, null=True)
-    alt_contact2 = models.CharField(max_length=50, blank=True, null=True)
-    active = models.CharField(db_column='Active', max_length=50, blank=True, null=True)  # Field name made lowercase.
-    designation = models.CharField(max_length=256, blank=True, null=True)
-    type = models.IntegerField()
-    modified_by = models.CharField(max_length=100, blank=True, null=True)
-    status_cnt = models.CharField(max_length=10, blank=True, null=True)
-    created_at = models.DateTimeField(blank=True, null=True)
-    updated_at = models.DateTimeField(blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'elsi_clg_contact_dtl'
-
-
 class ElsiCollegeDtls(models.Model):
     clg_code = models.CharField(max_length=512, blank=True, null=True)
     region_id = models.IntegerField(blank=True, null=True)
@@ -75,81 +50,6 @@ class ElsiCollegeDtls(models.Model):
         db_table = 'elsi_college_dtls'
 
 
-class ElsiDepartments(models.Model):
-    name = models.CharField(max_length=512)
-    main_branch = models.CharField(max_length=512, blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'elsi_departments'
-
-
-class ElsiDesignations(models.Model):
-    name = models.CharField(max_length=256)
-    type = models.CharField(max_length=256, blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'elsi_designations'
-
-
-class ElsiRegion(models.Model):
-    region_name = models.CharField(max_length=512)
-    type = models.IntegerField()
-    active = models.IntegerField()
-    clg_id = models.IntegerField(blank=True, null=True)
-    created_at = models.DateTimeField(blank=True, null=True)
-    updated_at = models.DateTimeField(blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'elsi_region'
-
-
-class ElsiState(models.Model):
-    code = models.CharField(max_length=6, blank=True, null=True)
-    state = models.CharField(max_length=100, blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'elsi_state'
-
-
-class ElsiTeachersDtls(models.Model):
-    user_id = models.IntegerField(blank=True, null=True)
-    clg_id = models.IntegerField(blank=True, null=True)
-    name = models.CharField(max_length=512, blank=True, null=True)
-    emailid = models.CharField(max_length=256, blank=True, null=True)
-    alt_email1 = models.CharField(max_length=256, blank=True, null=True)
-    alt_email2 = models.CharField(max_length=256, blank=True, null=True)
-    contact_num = models.CharField(max_length=25, blank=True, null=True)
-    alt_contact1 = models.CharField(max_length=50, blank=True, null=True)
-    department = models.CharField(max_length=128, blank=True, null=True)
-    designation = models.CharField(max_length=30, blank=True, null=True)
-    gender = models.CharField(max_length=15, blank=True, null=True)
-    coor_flag = models.IntegerField()
-    wo_flag = models.IntegerField()
-    workshop_id = models.IntegerField()
-    wo_attendee = models.IntegerField()
-    wo_count = models.IntegerField()
-    eyrtc_flag = models.IntegerField()
-    tbt_flag = models.IntegerField()
-    eyic_flag = models.IntegerField()
-    content_flag = models.IntegerField(blank=True, null=True)
-    status = models.CharField(db_column='Status', max_length=150, blank=True, null=True)  # Field name made lowercase.
-    status_flag = models.IntegerField(blank=True, null=True)
-    modified_by = models.CharField(max_length=100, blank=True, null=True)
-    elsi_flag = models.IntegerField(blank=True, null=True)
-    remarks = models.CharField(max_length=150, blank=True, null=True)
-    login_created = models.IntegerField()
-    created_at = models.DateTimeField(blank=True, null=True)
-    updated_at = models.DateTimeField(blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'elsi_teachers_dtls'
-
-
 class WorkshopDtls(models.Model):
     region_id = models.IntegerField(blank=True, null=True)
     clg_id = models.IntegerField(blank=True, null=True)
@@ -165,39 +65,6 @@ class WorkshopDtls(models.Model):
         db_table = 'workshop_dtls'
 
 
-class WorkshopParticipants(models.Model):
-    workshop_id = models.IntegerField(blank=True, null=True)
-    clg_id = models.IntegerField(blank=True, null=True)
-    tch_id = models.IntegerField(blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'workshop_participants'
-
-
-class WorkshopShipmentDtls(models.Model):
-    workshop_id = models.IntegerField(blank=True, null=True)
-    clg_id = models.IntegerField(blank=True, null=True)
-    shipment_date = models.DateField(blank=True, null=True)
-    tracking_no = models.IntegerField(blank=True, null=True)
-    mode_of_dispatch = models.CharField(max_length=1024, blank=True, null=True)
-    delivery_date = models.DateField(blank=True, null=True)
-    created_at = models.DateTimeField()
-    updated_at = models.DateTimeField()
-
-    class Meta:
-        managed = False
-        db_table = 'workshop_shipment_dtls'
-
-
-class WorkshopTeam(models.Model):
-    name = models.CharField(db_column='Name', max_length=255)  # Field name made lowercase.
-
-    class Meta:
-        managed = False
-        db_table = 'workshop_team'
-
-
 class WorkshopHospitality(models.Model):
     workshop_id = models.IntegerField(blank=True, null=True)
     hospitality = models.TextField(null=True)
@@ -208,5 +75,47 @@ class WorkshopHospitality(models.Model):
     expenditure = models.IntegerField(null=True)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'workshop_hospitality'
+
+
+class WorkshopConductedData(models.Model):
+    workshop_id = models.IntegerField(blank=True, null=True)
+    clg_id = models.IntegerField(blank=True, null=True)
+    college_name = models.CharField(max_length=520,blank=True, null=True)
+    workshop_team = models.CharField(max_length=520)
+    start_date = models.DateField(blank=True, null=True)
+    end_date = models.DateField(blank=True, null=True)
+    participants = models.IntegerField(blank=True, null=True)
+    college_count = models.IntegerField(blank=True, null=True)
+    loi_count = models.IntegerField(blank=True, null=True)
+    refresher_count = models.IntegerField(blank=True, null=True)
+    kits_distributed = models.IntegerField(blank=True, null=True)
+    kits_pending = models.IntegerField(blank=True, null=True)
+    certificates_distributed = models.IntegerField(blank=True, null=True)
+    certificates_pending = models.IntegerField(blank=True, null=True)
+
+    def __str__(self):
+        return '%s %s %s' % (self.college_name, self.start_date, self.end_date)
+
+    class Meta:
+        managed = True
+        db_table = 'workshop_conducted_data'
+
+
+class WorkshopModules(models.Model):
+    intro_speaker = models.CharField(max_length=520, null=True)
+    io_speaker = models.CharField(max_length=520, null=True)
+    motor_speaker = models.CharField(max_length=520, null=True)
+    lcd_speaker = models.CharField(max_length=520, null=True)
+    adc_speaker = models.CharField(max_length=520, null=True)
+    pwm_speaker = models.CharField(max_length=520, null=True)
+    interrupt_speaker = models.CharField(max_length=520, null=True)
+    wlf_speaker = models.CharField(max_length=520, null=True)
+    workshop_conducted = models.ForeignKey(WorkshopConductedData, on_delete=models.CASCADE)
+    hosts = models.CharField(max_length=520, null=True)
+    principal = models.CharField(max_length=520, null=True)
+
+    class Meta:
+        managed = True
+        db_table = 'workshop_modules_taken'

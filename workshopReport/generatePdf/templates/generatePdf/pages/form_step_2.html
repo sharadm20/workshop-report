@@ -1,5 +1,6 @@
 {% extends "generatePdf/base.html" %}
 {% block content %}
+{% load bulma_tags %}
 <div class="container">
     <div class="columns is-multiline">
         <div class="column is-8">
@@ -55,6 +56,7 @@
         <div class="block">
         <form action="/step-2" method="post" enctype="multipart/form-data">
             {% csrf_token %}
+            {{ form |bulma }}
            <div id="file-js-example" class="file has-name">
                 <label class="file-label">
                 <input class="file-input" type="file" name="report_file">

@@ -33,7 +33,7 @@ ADMIN_ENABLED = False
 # Application definition
 
 INSTALLED_APPS = [
-    'generatePdf',
+    'generatePdf.apps.GeneratepdfConfig',
     'bulma',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -91,7 +91,11 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'django_workshop',
         'USER': 'admin',
-        'PASSWORD': 'secret'
+        'PASSWORD': 'secret',
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
+        }
+
     },
     'elsi_master': {
         'NAME': 'elsi_master',
