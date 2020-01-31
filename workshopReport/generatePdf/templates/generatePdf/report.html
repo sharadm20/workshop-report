@@ -8,27 +8,31 @@
     <title>{% block title %}College Name{% endblock %} - Report</title>
     {% endblock %}
 
-    <link rel="stylesheet" href="https://cdn.rawgit.com/octoshrimpy/bulma-o-steps/master/bulma-steps.css">
+    <link rel="stylesheet" href="https://cdn.rawgit.com/octoshrimpy/bulma-o-steps/master/bulma-steps.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.css" />
   {% load static %}
     <link rel="stylesheet" href="{% static "/bulma/css/style.min.css" %}">
     <style>
-        @media print {
-    body{
-        width: 21cm;
-        height: 29.7cm;
-        margin: 30mm 45mm 30mm 45mm;
-        /* change the margins as you want them to be. */
+        @page  {
+            size : A4 portrait;
         }
-    }
     </style>
+      <script
+  src="https://code.jquery.com/jquery-3.4.1.min.js"
+  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+  crossorigin="anonymous"></script>
 
 </head>
 <body>
-    <div id="container">
-        <h2><u> e-Yantra Lab Setup Initiative (eLSI) </u></h2>
-        <h4 class="title">Workshop Report</h4>
+    <div id="container-fluid">
+        <h2 class="title"><u> e-Yantra Lab Setup Initiative (eLSI) </u></h2>
+        <h4 class="subtitle">Workshop Report</h4>
         <div class="column">
             {% block detail %}
+            {% endblock %}
+        </div>
+      <div class="column">
+            {% block college %}
             {% endblock %}
         </div>
         <h5>Workshop Feedback Response Analysis (Question-wise)</h5>
@@ -46,10 +50,8 @@
     </div>
 </body>
     <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
-  <script
-  src="https://code.jquery.com/jquery-3.4.1.min.js"
-  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
-  crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+
 {% block script %}
 
  {% endblock %}

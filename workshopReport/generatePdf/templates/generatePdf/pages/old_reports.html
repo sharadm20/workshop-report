@@ -1,0 +1,52 @@
+{% extends "generatePdf/base.html" %}
+{% block content %}
+<div class="container">
+    <div class="columns is-multiline">
+        <div class="column">
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Workshop conducted at</th>
+                        <th>Workshop team</th>
+                        <th>Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for report in reports %}
+                    <tr>
+                    <td>{{ report.college_name }}</td>
+                    <td>{{ report.workshop_team }}</td>
+                    <td>{{ report.start_date }} to {{ report.end_date }}</td>
+                        <td><form method="POST" action="{% url 'workshop_pdf' report.id %}"> {% csrf_token %}
+                            <button class="button is-primary" type="submit">Generate</button>
+                        </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+    <script>
+        function generateWorkshopPdf(id) {
+                $.ajax({
+              type: "POST",
+              url: "/ajax/workshop_pdf",
+              data: {
+                'id':id , 'csrfmiddlewaretoken': $("[name=csrfmiddlewaretoken]").val()
+              },
+              success: function (response) {
+                  if(response){
+                      console.log(response)
+                  }
+              }
+            });
+    }
+
+    </script>
+{% endblock %}

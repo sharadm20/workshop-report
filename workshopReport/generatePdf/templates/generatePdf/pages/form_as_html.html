@@ -12,9 +12,131 @@
     <p><strong>Number of Certificates:</strong> Distributed = {{ workshop.certificates_distributed }} Pending = {{ workshop.certificates_pending }}</p>
 
 {% endblock %}
+{% block college %}
+    <h3>Coordinators (hosts): {{ workshop_modules.hosts }}</h3>
+    <h3>Principal: {{ workshop_modules.principal }}</h3>
+{% endblock %}
 {% block feedback %}
-     <p><strong>Feedback response count:</strong> 0 </p>
+     <p><strong>Feedback response count:</strong> {{ count }} </p>
      <p>The workshop was conducted by <strong>{{ workshop.workshop_team }}</strong></p>
     <h5> Modules taken- </h5>
+    <p><strong>1. Introduction -</strong> {{ workshop_modules.intro_speaker }}
+        <strong>2. IO -</strong> {{ workshop_modules.io_speaker }}</p>
+    <p><strong>3. Motor -</strong> {{ workshop_modules.motor_speaker }}
+        <strong>4. LCD -</strong> {{ workshop_modules.lcd_speaker }}</p>
+    <p><strong>5. ADC -</strong> {{ workshop_modules.adc_speaker }}
+        <strong>6. Interrupt -</strong> {{ workshop_modules.interrupt_speaker }}</p>
+    <p><strong>7. PWM -</strong> {{ workshop_modules.pwm_speaker }}
+        <strong>8. White Line Following -</strong> {{ workshop_modules.wlf_speaker }}</p>
+    <div class="column is-6">
+        <h4>Q1. The content covered in workshop was: </h4>
+        <canvas id="id_chart_q1" width="100" height="100"></canvas>
+    </div>
+    <div class="column">
+        <h4>Q2. The content covered in workshop will be: </h4>
+        <canvas id="id_chart_q2" width="400" height="400"></canvas>
+    </div>
+    <div class="column">
+        <h4>Q3. Was the workshop interactive? </h4>
+        <canvas id="id_chart_q3" width="400" height="400"></canvas>
+    </div>
+    <div class="column">
+        <h4>Q4. The theory and practical session were well balanced? </h4>
+        <canvas id="id_chart_q4" width="400" height="400"></canvas>
+    </div>
+    <div class="column">
+        <h4>Q5. Was 2 days adequate for the contents covered in the workshop? </h4>
+        <canvas id="id_chart_q5" width="400" height="400"></canvas>
+    </div>
+    <div class="column">
+        <h4>Q6. Will the content covered in workshop serve as extended material to teach your respective course in college? </h4>
+        <canvas id="id_chart_q6" width="400" height="400"></canvas>
+    </div>
+    <div class="column">
+        <h4>Q7. Rate the modules (1-10: 1-Best, 10-Worst) </h4>
+        <canvas id="id_chart_q7a" width="400" height="400"></canvas>
+        <canvas id="id_chart_q7b" width="400" height="400"></canvas>
+        <canvas id="id_chart_q7c" width="400" height="400"></canvas>
+        <canvas id="id_chart_q7d" width="400" height="400"></canvas>
+        <canvas id="id_chart_q7e" width="400" height="400"></canvas>
+        <canvas id="id_chart_q7f" width="400" height="400"></canvas>
+        <canvas id="id_chart_q7g" width="400" height="400"></canvas>
+        <canvas id="id_chart_q7h" width="400" height="400"></canvas>
+    </div>
+    <div class="column">
+        <h4>Q8. Suggestion for improvements: </h4>
+        <p></p>
+    </div>
+    <div class="column">
+        <h4>Q9. The workshop team was? </h4>
+        <canvas id="id_chart_q9" width="400" height="400"></canvas>
+    </div>
+      <div class="column">
+        <h4>Q10. Will you recommend this workshop to colleague? </h4>
+        <canvas id="id_chart_q10" width="400" height="400"></canvas>
+    </div>
+      <div class="column">
+        <h4>Q11. Were you satisfied with overall workshop arrangements? (accommodation, food, etc) </h4>
+        <canvas id="id_chart_q11" width="400" height="400"></canvas>
+    </div>
 
+      <div class="column">
+        <h4>Q12. If you have not submitted Letter of Intent(Loi), how likely your college going to submit Loi after the workshop? </h4>
+        <canvas id="id_chart_q12" width="400" height="400"></canvas>
+    </div>
+      <div class="column">
+        <h4>Q13. How do you propose to use the robot given to you in your college?</h4>
+        <p>some,,,</p>
+    </div>
+      <div class="column">
+        <h4>Q14. Would you like to recommend any specific topic to be included in such a workshop when it is conducted the next time?</h4>
+        <p>some ...</p>
+    </div>
+      <div class="column">
+        <h4>Q15. Do you wish to recommend any specific embedded systems s/w tools to be included in the workshop? </h4>
+        <p>some ..</p>
+    </div>
+      <div class="column">
+        <h4>Q16. Any other general comments? </h4>
+        <p>
+            <ul>
+            {% for key, values in data.q23.items %}
+                <li>{{ values }}</li>
+            {% endfor %}
+            </ul>
+          </p>
+    </div>
+
+{% endblock %}
+
+{% block hospitality %}
+    <h5>Hospitality</h5>
+    <p>{{ workshop_hospitality.hospitality }}</p>
+    <h5>Quality of accommodation</h5>
+    <p>{{ workshop_hospitality.quality_accommodation }}</p>
+    <h5>Quality of food arranged (Breakfast, Lunch, Dinner)</h5>
+    <p>{{ workshop_hospitality.quality_food }}</p>
+    <h5>Quality of logistics</h5>
+    <p>{{ workshop_hospitality.quality_logistics }}</p>
+    <h5>Our observations</h5>
+    <p>{{ workshop_hospitality.observation }}</p>
+    <h5>Total Expenditure of team</h5>
+    <p><strong>{{ workshop_hospitality.expenditure }}</strong></p>
+{% endblock %}
+{% block script %}
+    <script>
+    const ctx = $('#id_chart_q1');
+    const data = {{ q1_count }};
+    const myPieChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: ['Easy', 'Medium', 'Hard'],
+            datasets:[{
+                label: "Difficulty of workshop",
+                backgroundColor: ['#16a085','#e67e22','#EC3737'],
+                data : data
+            }],
+        },
+    });
+    </script>
 {% endblock %}

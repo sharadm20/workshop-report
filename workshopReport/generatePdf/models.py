@@ -65,20 +65,6 @@ class WorkshopDtls(models.Model):
         db_table = 'workshop_dtls'
 
 
-class WorkshopHospitality(models.Model):
-    workshop_id = models.IntegerField(blank=True, null=True)
-    hospitality = models.TextField(null=True)
-    quality_accommodation = models.TextField(null=True)
-    quality_food = models.TextField(null=True)
-    quality_logistics = models.TextField(null=True)
-    observation = models.TextField(null=True)
-    expenditure = models.IntegerField(null=True)
-
-    class Meta:
-        managed = True
-        db_table = 'workshop_hospitality'
-
-
 class WorkshopConductedData(models.Model):
     workshop_id = models.IntegerField(blank=True, null=True)
     clg_id = models.IntegerField(blank=True, null=True)
@@ -94,6 +80,8 @@ class WorkshopConductedData(models.Model):
     kits_pending = models.IntegerField(blank=True, null=True)
     certificates_distributed = models.IntegerField(blank=True, null=True)
     certificates_pending = models.IntegerField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
 
     def __str__(self):
         return '%s %s %s' % (self.college_name, self.start_date, self.end_date)
@@ -101,6 +89,22 @@ class WorkshopConductedData(models.Model):
     class Meta:
         managed = True
         db_table = 'workshop_conducted_data'
+
+
+class WorkshopHospitality(models.Model):
+    workshop_conducted = models.ForeignKey(WorkshopConductedData, on_delete=models.CASCADE)
+    hospitality = models.TextField(null=True)
+    quality_accommodation = models.TextField(null=True)
+    quality_food = models.TextField(null=True)
+    quality_logistics = models.TextField(null=True)
+    observation = models.TextField(null=True)
+    expenditure = models.IntegerField(null=True)
+    created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
+
+    class Meta:
+        managed = True
+        db_table = 'workshop_hospitality'
 
 
 class WorkshopModules(models.Model):
@@ -115,6 +119,8 @@ class WorkshopModules(models.Model):
     workshop_conducted = models.ForeignKey(WorkshopConductedData, on_delete=models.CASCADE)
     hosts = models.CharField(max_length=520, null=True)
     principal = models.CharField(max_length=520, null=True)
+    created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
 
     class Meta:
         managed = True
