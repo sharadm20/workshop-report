@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     {% block head %}
 
@@ -13,8 +14,14 @@
   {% load static %}
     <link rel="stylesheet" href="{% static "/bulma/css/style.min.css" %}">
     <style>
-        @page  {
-            size : A4 portrait;
+        @import url('https://fonts.googleapis.com/css?family=Lato&display=swap');
+        @page {
+        size: A4; /* Change from the default size of A4 */
+         /* Set margin on each page */
+        }
+        html{
+            {#background-image: url({% static "generatePdf/img/water_mark.png" %});#}
+            font-family: 'Lato', sans-serif;
         }
     </style>
       <script
@@ -24,9 +31,9 @@
 
 </head>
 <body>
-    <div id="container-fluid">
-        <h2 class="title"><u> e-Yantra Lab Setup Initiative (eLSI) </u></h2>
-        <h4 class="subtitle">Workshop Report</h4>
+    <div id="container">
+        <h2 class="title has-text-centered"><u> e-Yantra Lab Setup Initiative (eLSI) </u></h2>
+        <h2 class="subtitle has-text-centered">Workshop Report</h2>
         <div class="column">
             {% block detail %}
             {% endblock %}

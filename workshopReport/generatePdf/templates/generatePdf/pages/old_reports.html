@@ -19,7 +19,7 @@
                     <td>{{ report.college_name }}</td>
                     <td>{{ report.workshop_team }}</td>
                     <td>{{ report.start_date }} to {{ report.end_date }}</td>
-                        <td><form method="POST" action="{% url 'workshop_pdf' report.id %}"> {% csrf_token %}
+                        <td><form method="POST" action="{% url 'workshop_pdf_download' report.id %}"> {% csrf_token %}
                             <button class="button is-primary" type="submit">Generate</button>
                         </form>
                         </td>

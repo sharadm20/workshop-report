@@ -1,13 +1,23 @@
-from django.core import serializers
-from django.http import HttpResponse, JsonResponse
+from django.conf import settings
+import os
 import json
-from django.shortcuts import render
-from django.shortcuts import redirect
+import matplotlib.pyplot as plt
+import pandas as pd
 from django.core.files.storage import FileSystemStorage
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import redirect
+from django.shortcuts import render
+from django.template.loader import get_template
+from django.views.generic import View
+
 from .forms import WorkshopConductedForm, WorkshopModulesForm
 from .forms import WorkshopHospitalityForm
 from .models import *
-import pandas as pd
+from .utils import render_pdf_view
+from wkhtmltopdf.views import PDFTemplateResponse
+from django.template.loader import render_to_string
+from weasyprint import HTML
+import tempfile
 
 
 def index(request):
@@ -127,36 +137,38 @@ def workshopDtls(request):
 
 def workshopId(request):
     workshop_id = request.session['workshop_detail']['workshop_id']
-    print(workshop_id)
     data = {
         "workshop_id": workshop_id
     }
     return HttpResponse(json.dumps(data), content_type="application/json")
 
 
-def workshopPdf(request, workshop_id=None):
+def workshopPdfHtml(request, workshop_id=None):
     if request.method == 'POST' and workshop_id is not None:
-        workshop_conducted = WorkshopConductedData.objects.get(id=workshop_id)
-        workshop_hospitality = WorkshopHospitality.objects.get(workshop_conducted=workshop_id)
-        workshop_modules = WorkshopModules.objects.get(workshop_conducted=workshop_id)
-        df = pd.read_csv('media/report.csv')
-        df = df.dropna()
-        df.columns = ['time', 'venue', 'q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8', 'q9', 'q10',
-                      'q11', 'q12', 'q13', 'q14', 'q15', 'q16', 'q17', 'q18', 'q19', 'q20', 'q21', 'q22', 'q23', 'name',
-                      'college', 'email']
-        count = df['time'].count
-        q1_count = df['q1'].value_counts()
-        q1_data = q1_count.tolist()
-        df = df.to_dict()
-        context = {
-            'workshop': workshop_conducted,
-            'workshop_hospitality': workshop_hospitality,
-            'workshop_modules': workshop_modules,
-            'data': df,
-            'count': count,
-            'q1_count': q1_data
-        }
+        context = get_context(workshop_id)
         return render(request, 'generatePdf/pages/form_as_html.html', context)
+
+
+def workshopPdfDownload(request, workshop_id=None):
+    if request.method == 'POST' and workshop_id is not None:
+        context = get_context(workshop_id)
+        # return PDFTemplateResponse(request, 'generatePdf/pages/form_as_html.html', context,
+        #                            show_content_in_browser=True, cmd_options=settings.WKHTMLTOPDF_CMD_OPTIONS)
+        html_string = render_to_string('generatePdf/pages/form_as_html.html', context)
+        html = HTML(string=html_string, base_url=request.build_absolute_uri())
+        result = html.write_pdf()
+
+        # Creating http response
+        response = HttpResponse(content_type='application/pdf;')
+        response['Content-Disposition'] = 'inline; filename=list_people.pdf'
+        response['Content-Transfer-Encoding'] = 'binary'
+        with tempfile.NamedTemporaryFile(delete=True) as output:
+            output.write(result)
+            output.flush()
+            output = open(output.name, 'rb')
+            response.write(output.read())
+
+        return response
 
 
 def chartData(request):
@@ -166,3 +178,57 @@ def chartData(request):
                   'college', 'email']
     data = df.to_json()
     return JsonResponse(data)
+
+
+class GeneratePDF(View):
+    def __init__(self, context):
+        self.context = context
+
+    def get(self, request, *args, **kwargs):
+        template = get_template('generatePdf/pages/form_as_html.html')
+        html = template.render(self.context)
+        pdf = render_pdf_view('generatePdf/pages/form_as_html.html', self.context)
+        if pdf:
+            response = HttpResponse(pdf, content_type='application/pdf')
+            filename = "Workshop_Report_%s.pdf" % self.context['workshop'].college_name
+            content = "inline; filename='%s'" % filename
+            download = request.GET.get("download")
+            if download:
+                content = "attachment; filename='%s'" % filename
+            response['Content-Disposition'] = content
+            return response
+        return HttpResponse("Not found")
+
+
+def get_context(workshop_id):
+    workshop_conducted = WorkshopConductedData.objects.get(id=workshop_id)
+    workshop_hospitality = WorkshopHospitality.objects.get(workshop_conducted=workshop_id)
+    workshop_modules = WorkshopModules.objects.get(workshop_conducted=workshop_id)
+    df = pd.read_csv('media/report.csv')
+    df = df.dropna()
+    df.columns = ['time', 'venue', 'q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8', 'q9', 'q10',
+                  'q11', 'q12', 'q13', 'q14', 'q15', 'q16', 'q17', 'q18', 'q19', 'q20', 'q21', 'q22', 'q23', 'name',
+                  'college', 'email']
+    count = df['time'].count
+    q1_count = df['q1'].value_counts()
+    q1_data = q1_count.tolist()
+    df = df.to_dict()
+    context = {
+        'workshop': workshop_conducted,
+        'workshop_hospitality': workshop_hospitality,
+        'workshop_modules': workshop_modules,
+        'data': df,
+        'count': count,
+        'q1_count': q1_data
+    }
+    # Pie chart, where the slices will be ordered and plotted counter-clockwise:
+    # labels = ['Easy', 'Medium']
+    # sizes = q1_data
+    # only "explode" the 2nd slice (i.e. 'Hogs')
+
+    # fig1, ax1 = plt.subplots()
+    # ax1.pie(q1_data, labels=labels, autopct='%1.1f%%',
+    #       shadow=True, startangle=90)
+    # ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+    # plt.savefig(os.path.join(settings.BASE_DIR, 'generatePdf/static/generatePdf/img/q1.png'))
+    return context

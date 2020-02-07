@@ -1,5 +1,9 @@
 {% extends "generatePdf/report.html" %}
 {% block detail %}
+    {% load static %}
+    <img id="id_img_q1" />
+
+
     <p><strong>Conducted at:</strong> {{ workshop.college_name }}</p>
     <p><strong>Date:</strong> {{ workshop.start_date }} {{ workshop.end_date }}</p>
     <p><strong>Conducted by:</strong> {{ workshop.workshop_team }}</p>
@@ -31,6 +35,7 @@
     <div class="column is-6">
         <h4>Q1. The content covered in workshop was: </h4>
         <canvas id="id_chart_q1" width="100" height="100"></canvas>
+        <img src="{% static 'generatePdf/img/q1.png' %}">
     </div>
     <div class="column">
         <h4>Q2. The content covered in workshop will be: </h4>
@@ -123,20 +128,30 @@
     <h5>Total Expenditure of team</h5>
     <p><strong>{{ workshop_hospitality.expenditure }}</strong></p>
 {% endblock %}
-{% block script %}
-    <script>
-    const ctx = $('#id_chart_q1');
-    const data = {{ q1_count }};
-    const myPieChart = new Chart(ctx, {
-        type: 'pie',
-        data: {
-            labels: ['Easy', 'Medium', 'Hard'],
-            datasets:[{
-                label: "Difficulty of workshop",
-                backgroundColor: ['#16a085','#e67e22','#EC3737'],
-                data : data
-            }],
-        },
-    });
-    </script>
-{% endblock %}
+{#{% block script %}#}
+{#    <script>#}
+{#    const ctx = $('#id_chart_q1');#}
+{#    var data = {{ q1_count }};#}
+{#    const myPieChart = new Chart(ctx, {#}
+{#        type: 'pie',#}
+{#        data: {#}
+{#            labels: ['Easy', 'Medium', 'Hard'],#}
+{#            datasets:[{#}
+{#                label: "Difficulty of workshop",#}
+{#                backgroundColor: ['#16a085','#e67e22','#EC3737'],#}
+{#                data : data#}
+{#            }],#}
+{#        },#}
+{#        options: {#}
+{#            animation: {#}
+{#                onComplete: function(){#}
+{#                    let url = myPieChart.toBase64Image();#}
+{#                    $("#id_img_q1").attr("src", url);#}
+{#                },#}
+{#            }#}
+{#        }#}
+{#    });#}
+{#    function done(){#}
+{#    }#}
+{#    </script>#}
+{#{% endblock %}#}

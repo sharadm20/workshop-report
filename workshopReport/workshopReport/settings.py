@@ -29,12 +29,12 @@ ALLOWED_HOSTS = []
 
 ADMIN_ENABLED = False
 
-
 # Application definition
 
 INSTALLED_APPS = [
     'generatePdf.apps.GeneratepdfConfig',
     'bulma',
+    'wkhtmltopdf',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -82,7 +82,6 @@ TEMPLATES = [
 SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
 WSGI_APPLICATION = 'workshopReport.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
@@ -124,7 +123,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
@@ -138,11 +136,14 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
-
+STATIC_ROOT = os.path.join(PROJECT_DIR, 'static')
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, "static"),]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static"), ]
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+WKHTMLTOPDF_CMD_OPTIONS = {
+    'quiet': True,
+}
+WKHTMLTOPDF_CMD = 'xvfb-run -a wkhtmltopdf'
