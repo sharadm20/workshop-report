@@ -1,6 +1,4 @@
-
 class DBRouter:
-
     route_app_labels = {'elsi_master'}
 
     def db_for_read(self, model, **hints):
@@ -33,4 +31,6 @@ class DBRouter:
         """
         All non-auth models end up in this pool.
         """
-        return True
+        if app_label in self.route_app_labels:
+            return db == 'elsi_master'
+        return None

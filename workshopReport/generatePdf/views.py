@@ -13,7 +13,6 @@ from django.views.generic import View
 from .forms import WorkshopConductedForm, WorkshopModulesForm
 from .forms import WorkshopHospitalityForm
 from .models import *
-from .utils import render_pdf_view
 from wkhtmltopdf.views import PDFTemplateResponse
 from django.template.loader import render_to_string
 from weasyprint import HTML
@@ -180,24 +179,24 @@ def chartData(request):
     return JsonResponse(data)
 
 
-class GeneratePDF(View):
-    def __init__(self, context):
-        self.context = context
-
-    def get(self, request, *args, **kwargs):
-        template = get_template('generatePdf/pages/form_as_html.html')
-        html = template.render(self.context)
-        pdf = render_pdf_view('generatePdf/pages/form_as_html.html', self.context)
-        if pdf:
-            response = HttpResponse(pdf, content_type='application/pdf')
-            filename = "Workshop_Report_%s.pdf" % self.context['workshop'].college_name
-            content = "inline; filename='%s'" % filename
-            download = request.GET.get("download")
-            if download:
-                content = "attachment; filename='%s'" % filename
-            response['Content-Disposition'] = content
-            return response
-        return HttpResponse("Not found")
+# class GeneratePDF(View):
+#     def __init__(self, context):
+#         self.context = context
+#
+#     def get(self, request, *args, **kwargs):
+#         template = get_template('generatePdf/pages/form_as_html.html')
+#         html = template.render(self.context)
+#         pdf = render_pdf_view('generatePdf/pages/form_as_html.html', self.context)
+#         if pdf:
+#             response = HttpResponse(pdf, content_type='application/pdf')
+#             filename = "Workshop_Report_%s.pdf" % self.context['workshop'].college_name
+#             content = "inline; filename='%s'" % filename
+#             download = request.GET.get("download")
+#             if download:
+#                 content = "attachment; filename='%s'" % filename
+#             response['Content-Disposition'] = content
+#             return response
+#         return HttpResponse("Not found")
 
 
 def get_context(workshop_id):

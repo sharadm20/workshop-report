@@ -68,7 +68,7 @@ class WorkshopDtls(models.Model):
 class WorkshopConductedData(models.Model):
     workshop_id = models.IntegerField(blank=True, null=True)
     clg_id = models.IntegerField(blank=True, null=True)
-    college_name = models.CharField(max_length=520,blank=True, null=True)
+    college_name = models.CharField(max_length=520, blank=True, null=True)
     workshop_team = models.CharField(max_length=520)
     start_date = models.DateField(blank=True, null=True)
     end_date = models.DateField(blank=True, null=True)
@@ -125,3 +125,52 @@ class WorkshopModules(models.Model):
     class Meta:
         managed = True
         db_table = 'workshop_modules_taken'
+
+
+class WorkshopFeedbackResponse(models.Model):
+    name = models.CharField(max_length=255, null=True)
+    college_name = models.CharField(max_length=300, null=True)
+    email = models.CharField(max_length=250, null=True)
+    feedback_for_venue = models.TextField(null=True)
+    q1 = models.CharField(max_length=100, null=True)
+    q2 = models.CharField(max_length=100, null=True)
+    q3 = models.CharField(max_length=100, null=True)
+    q4 = models.CharField(max_length=100, null=True)
+    q5 = models.CharField(max_length=100, null=True)
+    q6 = models.CharField(max_length=100, null=True)
+    q7 = models.CharField(max_length=100, null=True)
+    q8 = models.CharField(max_length=100, null=True)
+    q9 = models.CharField(max_length=100, null=True)
+    q10 = models.CharField(max_length=100, null=True)
+    q11 = models.CharField(max_length=100, null=True)
+    q12 = models.CharField(max_length=100, null=True)
+    q13 = models.CharField(max_length=100, null=True)
+    q14 = models.CharField(max_length=100, null=True)
+    q15 = models.CharField(max_length=100, null=True)
+    q16 = models.CharField(max_length=100, null=True)
+    q17 = models.CharField(max_length=100, null=True)
+    q18 = models.CharField(max_length=100, null=True)
+    q19 = models.CharField(max_length=100, null=True)
+    q20 = models.CharField(max_length=100, null=True)
+    q21 = models.CharField(max_length=100, null=True)
+    q22 = models.CharField(max_length=100, null=True)
+    q23 = models.CharField(max_length=100, null=True)
+    created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
+
+    class Meta:
+        app_label = 'elsi_master'
+        managed = True
+        db_table = 'workshop_feedback_response'
+
+
+class WorkshopFeedbackQuestion(models.Model):
+    question = models.CharField(max_length=600, null=True)
+    option_1 = models.CharField(max_length=100, null=True)
+    option_2 = models.CharField(max_length=100, null=True)
+    option_3 = models.CharField(max_length=100, null=True)
+
+    class Meta:
+        app_label = 'elsi_master'
+        managed = True
+        db_table = 'workshop_feedback_questions'
