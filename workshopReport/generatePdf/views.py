@@ -4,16 +4,14 @@ import json
 import matplotlib.pyplot as plt
 import pandas as pd
 from django.core.files.storage import FileSystemStorage
+from django.db.models import Count, Case, When, DecimalField
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect
 from django.shortcuts import render
-from django.template.loader import get_template
-from django.views.generic import View
-
+import numpy as np
 from .forms import WorkshopConductedForm, WorkshopModulesForm
 from .forms import WorkshopHospitalityForm
 from .models import *
-from wkhtmltopdf.views import PDFTemplateResponse
 from django.template.loader import render_to_string
 from weasyprint import HTML
 import tempfile
@@ -151,8 +149,6 @@ def workshopPdfHtml(request, workshop_id=None):
 def workshopPdfDownload(request, workshop_id=None):
     if request.method == 'POST' and workshop_id is not None:
         context = get_context(workshop_id)
-        # return PDFTemplateResponse(request, 'generatePdf/pages/form_as_html.html', context,
-        #                            show_content_in_browser=True, cmd_options=settings.WKHTMLTOPDF_CMD_OPTIONS)
         html_string = render_to_string('generatePdf/pages/form_as_html.html', context)
         html = HTML(string=html_string, base_url=request.build_absolute_uri())
         result = html.write_pdf()
@@ -179,55 +175,51 @@ def chartData(request):
     return JsonResponse(data)
 
 
-# class GeneratePDF(View):
-#     def __init__(self, context):
-#         self.context = context
-#
-#     def get(self, request, *args, **kwargs):
-#         template = get_template('generatePdf/pages/form_as_html.html')
-#         html = template.render(self.context)
-#         pdf = render_pdf_view('generatePdf/pages/form_as_html.html', self.context)
-#         if pdf:
-#             response = HttpResponse(pdf, content_type='application/pdf')
-#             filename = "Workshop_Report_%s.pdf" % self.context['workshop'].college_name
-#             content = "inline; filename='%s'" % filename
-#             download = request.GET.get("download")
-#             if download:
-#                 content = "attachment; filename='%s'" % filename
-#             response['Content-Disposition'] = content
-#             return response
-#         return HttpResponse("Not found")
-
-
 def get_context(workshop_id):
     workshop_conducted = WorkshopConductedData.objects.get(id=workshop_id)
     workshop_hospitality = WorkshopHospitality.objects.get(workshop_conducted=workshop_id)
     workshop_modules = WorkshopModules.objects.get(workshop_conducted=workshop_id)
-    df = pd.read_csv('media/report.csv')
-    df = df.dropna()
-    df.columns = ['time', 'venue', 'q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8', 'q9', 'q10',
-                  'q11', 'q12', 'q13', 'q14', 'q15', 'q16', 'q17', 'q18', 'q19', 'q20', 'q21', 'q22', 'q23', 'name',
-                  'college', 'email']
-    count = df['time'].count
-    q1_count = df['q1'].value_counts()
-    q1_data = q1_count.tolist()
-    df = df.to_dict()
+    workshop_feedback = WorkshopFeedbackResponse.objects.filter(workshop_conducted=workshop_id)
+    plot_graph_save(workshop_feedback)
     context = {
         'workshop': workshop_conducted,
         'workshop_hospitality': workshop_hospitality,
         'workshop_modules': workshop_modules,
-        'data': df,
-        'count': count,
-        'q1_count': q1_data
+        'data': workshop_feedback,
+        'count': workshop_feedback.count(),
     }
-    # Pie chart, where the slices will be ordered and plotted counter-clockwise:
-    # labels = ['Easy', 'Medium']
-    # sizes = q1_data
-    # only "explode" the 2nd slice (i.e. 'Hogs')
-
-    # fig1, ax1 = plt.subplots()
-    # ax1.pie(q1_data, labels=labels, autopct='%1.1f%%',
-    #       shadow=True, startangle=90)
-    # ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
-    # plt.savefig(os.path.join(settings.BASE_DIR, 'generatePdf/static/generatePdf/img/q1.png'))
     return context
+
+
+def plot_graph_save(workshop_feedback):
+    q1_count = workshop_feedback.values('q1').annotate(count=Count('q1'))
+    sizes = [item['count'] for item in q1_count]
+    labels = [tag.value for tag in Q1Choice]
+    filename = 'generatePdf/static/generatePdf/img/q1.png'
+
+    fig1, ax1 = plt.subplots()
+    ax1.pie(sizes, labels=labels, autopct='%1.1f%%',
+            shadow=True, startangle=90)
+    ax1.axis('equal')
+    # Equal aspect ratio ensures that pie is drawn as a circle.
+    plt.savefig(os.path.join(settings.BASE_DIR, filename))
+    q2_count = workshop_feedback.values('q2').annotate(count=Count('q2'))
+    filename = 'generatePdf/static/generatePdf/img/q2.png'
+    labels = [tag.value for tag in Q2Choice]
+    sizes = [item['count'] for item in q2_count]
+    fig2, ax2 = plt.subplots()
+    ax2.pie(sizes, labels=labels, autopct='%1.1f%%',
+            shadow=True, startangle=90)
+    ax2.axis('equal')
+    plt.savefig(os.path.join(settings.BASE_DIR, filename))
+    q7_count = workshop_feedback.values('q7').annotate(count=Count('q7')).order_by('q7')
+    filename = 'generatePdf/static/generatePdf/img/q7.png'
+    objects = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    indexZ = np.arange(len(objects))
+    performance = [item['count'] for item in q7_count]
+    print(performance)
+    plt.bar(indexZ, performance)
+    plt.xticks(indexZ, objects)
+    plt.ylabel('Ratings')
+    plt.title('Introduction')
+    plt.savefig(os.path.join(settings.BASE_DIR, filename))

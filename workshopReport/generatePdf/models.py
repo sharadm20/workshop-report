@@ -7,6 +7,8 @@
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
 
+from .enum import Q1Choice, Q2Choice
+
 
 class ElsiCollegeDtls(models.Model):
     clg_code = models.CharField(max_length=512, blank=True, null=True)
@@ -132,8 +134,9 @@ class WorkshopFeedbackResponse(models.Model):
     college_name = models.CharField(max_length=300, null=True)
     email = models.CharField(max_length=250, null=True)
     feedback_for_venue = models.TextField(null=True)
-    q1 = models.CharField(max_length=100, null=True)
-    q2 = models.CharField(max_length=100, null=True)
+    workshop_conducted = models.ForeignKey(WorkshopConductedData, on_delete=models.CASCADE)
+    q1 = models.CharField(max_length=100, null=True, choices=[(tag, tag.value) for tag in Q1Choice])
+    q2 = models.CharField(max_length=100, null=True, choices=[(tag, tag.value) for tag in Q2Choice])
     q3 = models.CharField(max_length=100, null=True)
     q4 = models.CharField(max_length=100, null=True)
     q5 = models.CharField(max_length=100, null=True)
@@ -159,7 +162,6 @@ class WorkshopFeedbackResponse(models.Model):
     updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
 
     class Meta:
-        app_label = 'elsi_master'
         managed = True
         db_table = 'workshop_feedback_response'
 
@@ -171,6 +173,5 @@ class WorkshopFeedbackQuestion(models.Model):
     option_3 = models.CharField(max_length=100, null=True)
 
     class Meta:
-        app_label = 'elsi_master'
         managed = True
         db_table = 'workshop_feedback_questions'

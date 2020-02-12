@@ -34,7 +34,6 @@ ADMIN_ENABLED = False
 INSTALLED_APPS = [
     'generatePdf.apps.GeneratepdfConfig',
     'bulma',
-    'wkhtmltopdf',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -146,7 +145,3 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static"), ]
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
-WKHTMLTOPDF_CMD_OPTIONS = {
-    'quiet': True,
-}
-WKHTMLTOPDF_CMD = 'xvfb-run -a wkhtmltopdf'
