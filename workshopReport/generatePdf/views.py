@@ -212,14 +212,15 @@ def plot_graph_save(workshop_feedback):
             shadow=True, startangle=90)
     ax2.axis('equal')
     plt.savefig(os.path.join(settings.BASE_DIR, filename))
-    q7_count = workshop_feedback.values('q7').annotate(count=Count('q7')).order_by('q7')
+    fig7, ax7 = plt.subplots()
+    ax7.set_xbound(lower=0, upper=10)
     filename = 'generatePdf/static/generatePdf/img/q7.png'
     objects = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-    indexZ = np.arange(len(objects))
-    performance = [item['count'] for item in q7_count]
-    print(performance)
-    plt.bar(indexZ, performance)
-    plt.xticks(indexZ, objects)
+    performance = []
+    for i in objects:
+        performance.append(workshop_feedback.filter(q7__exact=i).count())
+    plt.bar(objects, performance, align='center')
+    plt.xticks(objects)
     plt.ylabel('Ratings')
     plt.title('Introduction')
     plt.savefig(os.path.join(settings.BASE_DIR, filename))
