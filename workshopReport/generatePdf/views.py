@@ -1,20 +1,25 @@
-from django.conf import settings
-import os
 import json
-import matplotlib.pyplot as plt
 import pandas as pd
 from django.core.files.storage import FileSystemStorage
 from django.db.models import Count, Case, When, DecimalField
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect
 from django.shortcuts import render
-import numpy as np
 from .forms import WorkshopConductedForm, WorkshopModulesForm
 from .forms import WorkshopHospitalityForm
 from .models import *
+from .graph_tool import *
+from .enum import *
 from django.template.loader import render_to_string
 from weasyprint import HTML
 import tempfile
+import sys
+
+BASE_IMAGE_URL = 'generatePdf/static/generatePdf/img/'
+
+
+def str_to_class(classname):
+    return getattr(sys.modules[__name__], classname)
 
 
 def index(request):
@@ -192,35 +197,30 @@ def get_context(workshop_id):
 
 
 def plot_graph_save(workshop_feedback):
-    q1_count = workshop_feedback.values('q1').annotate(count=Count('q1'))
-    sizes = [item['count'] for item in q1_count]
-    labels = [tag.value for tag in Q1Choice]
-    filename = 'generatePdf/static/generatePdf/img/q1.png'
+    """ Q1 to Q6 and Q16 to q19 are pie charts"""
+    question_pie = [1, 2, 3, 4, 5, 6, 16, 17, 18, 19]
+    for q in question_pie:
+        # count = workshop_feedback.values('q' + str(q)).annotate(count=Count('q' + str(q)))
+        classname = 'Q' + str(q) + 'Choice'
+        options = [1, 2, 3]
+        sizes = []
+        for i in options:
+            rel = 'q' + str(q) + '__exact'
+            sizes.append(workshop_feedback.filter(**{rel: i}).count())
+        print(sizes)
+        labels = [tag.value for tag in str_to_class(classname)]
 
-    fig1, ax1 = plt.subplots()
-    ax1.pie(sizes, labels=labels, autopct='%1.1f%%',
-            shadow=True, startangle=90)
-    ax1.axis('equal')
-    # Equal aspect ratio ensures that pie is drawn as a circle.
-    plt.savefig(os.path.join(settings.BASE_DIR, filename))
-    q2_count = workshop_feedback.values('q2').annotate(count=Count('q2'))
-    filename = 'generatePdf/static/generatePdf/img/q2.png'
-    labels = [tag.value for tag in Q2Choice]
-    sizes = [item['count'] for item in q2_count]
-    fig2, ax2 = plt.subplots()
-    ax2.pie(sizes, labels=labels, autopct='%1.1f%%',
-            shadow=True, startangle=90)
-    ax2.axis('equal')
-    plt.savefig(os.path.join(settings.BASE_DIR, filename))
-    fig7, ax7 = plt.subplots()
-    ax7.set_xbound(lower=0, upper=10)
-    filename = 'generatePdf/static/generatePdf/img/q7.png'
+        filename = BASE_IMAGE_URL + 'q' + str(q) + '.png'
+        pie_chart_save_image(sizes, labels, filename)
+
+    """ Q7 to Q14 are bar charts"""
+    question_bar = [7, 8, 9, 10, 11, 12, 13, 14]
     objects = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-    performance = []
-    for i in objects:
-        performance.append(workshop_feedback.filter(q7__exact=i).count())
-    plt.bar(objects, performance, align='center')
-    plt.xticks(objects)
-    plt.ylabel('Ratings')
-    plt.title('Introduction')
-    plt.savefig(os.path.join(settings.BASE_DIR, filename))
+    for q in question_bar:
+        filename = BASE_IMAGE_URL + 'q' + str(q) + '.png'
+        performance = []
+        for i in objects:
+            rel = 'q' + str(q) + '__exact'
+            performance.append(workshop_feedback.filter(**{rel: i}).count())
+        print(performance)
+        bar_chart_save_image(objects, performance, filename, 'Ratings', q)

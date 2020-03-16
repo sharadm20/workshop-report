@@ -7,7 +7,7 @@
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
 
-from .enum import Q1Choice, Q2Choice
+from .enum import *
 
 
 class ElsiCollegeDtls(models.Model):
