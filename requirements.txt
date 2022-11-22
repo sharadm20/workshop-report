@@ -20,7 +20,7 @@ mysqlclient==1.4.6
 numpy==1.18.1
 packaging==20.1
 pandas==0.25.3
-Pillow==7.0.0
+Pillow==9.3.0
 pycparser==2.19
 pyparsing==2.4.6
 PyPDF2==1.26.0
